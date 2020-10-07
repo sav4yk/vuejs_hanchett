@@ -35,13 +35,26 @@
                 <div class="col-md-6 description">
                     <h1 v-text="product.title"></h1>
                     <p v-html="product.description"></p>
+                    <div class="rating">
+                        <span v-bind:class="{'rating-active': checkRating(n)}"
+                              v-for="n in 5">✰</span>
+                    </div>
                     <p class="price">
                         {{ product.price | formatPrice }}
                     </p>
-                    <button class="default" v-on:click="addToCart"
+                    <button class="btn btn-primary btn-lg" v-on:click="addToCart"
                         v-if="canAddToCart">Add to cart</button>
-                    <button class="disabled"
+                    <button disabled="true" class="btn btn-primary btn-lg"
                             v-else>Add to cart</button>
+                    <span class="inventory-message" v-if="product.availableInventory - cartItemCount === 0">
+                        Товара нет в наличии!
+                    </span>
+                    <span class="inventory-message" v-else-if="product.availableInventory - cartItemCount < 5">
+                        Осталось {{ product.availableInventory - cartItemCount }} шт.!
+                    </span>
+                    <span class="inventory-message" v-else>
+                        Купите сейчас!
+                    </span>
                 </div>
             </div>
             <div v-else>
@@ -156,7 +169,8 @@
                 description: "One <b>100%</b> beef patty, pickles, ketchup and mustard served on a warm toasted bun",
                 price: 2000,
                 image: "assets/images/Burger_Original-Hamburger.jpg",
-                availableInventory: 5
+                availableInventory: 10,
+                rating: 3
             },
             cart: []
 
@@ -170,6 +184,9 @@
             },
             submitForm() {
                 alert('Заказан');
+            },
+            checkRating(n) {
+                return this.product.rating - n >= 0;
             }
         },
         computed: {
