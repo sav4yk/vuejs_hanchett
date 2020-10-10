@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Продвинутая работа с компонентами</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+<div id="app">
+    <form-component>
+        <h1>{{header}}</h1>
+        <label for="title" slot="titleSlot">{{titleLabel}}</label>
+        <label for="author" slot="authorSlot">{{authorLabel}}</label>
+    </form-component>
+    <book-component :books="books">
+        <h1 slot="header">{{header}}</h1>
+        <template slot="book" slot-scope="props">
+            <h2>
+                <i>{{props.text.title}}</i>
+                <small>by: {{props.text.author}}</small>
+            </h2>
+        </template>
+    </book-component>
+</div>
+<script>
+    Vue.config.devtools = true;
+
+    const FormComponent = {
+        template: `
+        <div>
+            <form>
+              <slot></slot>
+              <slot name="titleSlot"></slot>
+              <input id="title" type="text" /><br/>
+              <slot name="authorSlot"></slot>
+              <input id="author" type="text" /><br/>
+                <button>Submit</button>
+            </form>
+        </div>
+        `
+    }
+
+    const BookComponent ={
+        template: `
+        <div>
+            <slot name="header2"></slot>
+            <slot name="book"
+                v-for="book in books"
+                :text="book"></slot>
+        `,
+        props: ['books']
+    }
+    new Vue({
+        el: "#app",
+        components: {'form-component': FormComponent, 'book-component': BookComponent},
+        data() {
+            return {
+                titleLabel: 'The Title:',
+                authorLabel: 'The Author:',
+                header: 'Book Author Form',
+                header2: 'Book List',
+                books: [
+                    {author: 'John Smith', title: 'Best Of Times'},
+                    {author: 'Jane Doe', title: 'Go Wes Young Man'},
+                    {author: 'Avery Katz', title: 'The Life And Times Of Avery'}
+                ]
+            }
+        },
+        methods: {
+
+        }
+    });
+</script>
+</body>
+</html>
