@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transition</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style>
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 3.0s ease-out;
+        }
+        .fade-enter, .fade-leave-to {
+            opacity: 0;
+        }
+        .bounce-enter-active {
+            animation: bounceIn 2s;
+        }
+        .bounce-leave-active {
+            animation: bounceIn 2s reverse;
+        }
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div @click="show = !show">
+            <h2>{{title}}</h2>
+        </div>
+        <transition name="fade">
+            <div v-if="show">
+                <h1>{{description}}</h1>
+            </div>
+        </transition>
+        <transition name="bounce">
+            <div v-if="show">
+                <h1>{{description}}</h1>
+            </div>
+        </transition>
+        <transition name="fade2"
+            @enter="enter"
+            @leave="leave"
+            :css="false">
+            <div v-if="show">
+                <h1>{{description}}</h1>
+            </div>
+        </transition>
+    </div>
+<script>
+function addEventListener(el, done) {
+    el.addEventListener("animationend", function() {
+        el.style="";
+        done();
+    })
+}
+Vue.config.devtools = true
+var app = new Vue({
+    el: '#app',
+    data() {
+        return {
+            title: 'War and Peace',
+            description: 'Green people wobble with mineral at the bare saucer section!',
+            show: false
+        }
+    },
+    methods: {
+        enter(el, done) {
+            addEventListener(el, done);
+            el.style.animationName = "bounceIn";
+            el.style.animationDuration = "1.5s";
+        },
+        leave(el, done) {
+            addEventListener(el, done);
+            el.style.animationName = "bounceIn";
+            el.style.animationDuration = "1.5s";
+            el.style.animationDirection="reverse";
+        },
+    }
+    });
+</script>
+</body>
+</html>
