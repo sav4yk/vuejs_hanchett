@@ -49,11 +49,11 @@
 
 <script>
 import MyHeader from './Header.vue';
+import {mapGetters} from 'vuex';
 export default {
     name: 'imain',
     data () {
         return {
-            products: {},
             cart: []
         };
     },
@@ -100,7 +100,10 @@ export default {
                 }
                 return productsArray.sort(compare);
             }
-        }
+        },
+        ...mapGetters([
+            'products'
+        ])
     },
     filters: {
         formatPrice: function(price) {
@@ -120,10 +123,7 @@ export default {
         }
     },
     created: function () {
-        axios.get('/static/products.json').then(response => {
-            this.products = response.data.products;
-            console.log(this.products);
-        });
+        this.$store.dispatch('initSore')
     }
 }
 </script>
